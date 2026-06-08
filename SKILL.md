@@ -5,8 +5,21 @@ description: |
   触发词：解析 PDF、提取 PDF 内容、PDF 转文字/Markdown、读取 PDF、parse PDF、extract PDF、convert PDF to text。
   确定性触发（直接执行）：用户提供 PDF 路径 + 说解析/转换/提取。
   非确定性触发（先问）：只提到 PDF 文件名未说用途——询问："需要把这个 PDF 解析成 Markdown 吗？"
+tags:
+  - pdf-parse
 type: skill
 ---
+
+## 目录文件说明
+
+| 文件 | 作用 |
+|------|------|
+| [[pdf-parse/SKILL]] | Skill 主文件，定义触发条件、工作流程、注意事项 |
+| [[pdf-parse/meta]] | 关联声明：topics/product_scope/data 字段，供 `_discover.py` 自动计算与其他 skill 的关联关系 |
+| [[pdf-parse/parse_pdf.py\|parse_pdf.py]] | PDF 解析主脚本（基于 marker-pdf，自动安装依赖） |
+| [[pdf-parse/README]] | 快速使用说明 |
+| [[pdf-parse/progress]] | 开发进度记录 |
+| [[pdf-parse/task_plan]] | 历史任务规划文件 |
 
 # PDF → Markdown 转换 Skill
 
@@ -38,3 +51,14 @@ type: skill
 - 转换进度和状态信息输出到 stderr，Markdown 正文输出到 stdout
 - 需要网络连接（首次安装依赖和下载模型）
 - Python 3.10+ 推荐（marker-pdf 官方要求）
+
+---
+
+## 目录结构
+
+```
+pdf-parse/
+├── SKILL.md        # 本文件，skill 主逻辑
+├── meta.md         # 关联声明，供 _discover.py 计算关联 skill
+└── parse_pdf.py    # PDF 解析脚本（自动安装依赖，跨设备可用）
+```
