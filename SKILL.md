@@ -20,6 +20,7 @@ type: skill
 | [[pdf-parse/README]] | 快速使用说明 |
 | [[pdf-parse/progress]] | 开发进度记录 |
 | [[pdf-parse/task_plan]] | 历史任务规划文件 |
+| `.gitignore` | Git 忽略规则 |
 
 # PDF → Markdown 转换 Skill
 

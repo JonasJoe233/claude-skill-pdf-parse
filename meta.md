@@ -8,5 +8,5 @@ data_consumes: [PDF文件]
 
 ## 关联 Skill
 
-- [[hiring]] — 候选人简历是 PDF 时的前置步骤
-- [[hv-analysis]] — 研究对象是 PDF 文档时的前置步骤
+- [[hiring/SKILL|hiring]] — 候选人简历是 PDF 时的前置步骤
+- [[hv-analysis/SKILL|hv-analysis]] — 研究对象是 PDF 文档时的前置步骤
