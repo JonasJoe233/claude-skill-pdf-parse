@@ -1,6 +1,17 @@
 ---
 name: pdf-parse
-description: 将 PDF 转换为 Markdown，基于 marker-pdf，支持文本 PDF、图像 PDF、扫描件、表格、公式。自动安装依赖，任何机器开箱即用。
+description: |
+  将 PDF 转换为 Markdown，基于 marker-pdf，支持文本 PDF、图像 PDF、扫描件、表格、公式。自动安装依赖，任何机器开箱即用。
+
+  【确定性触发——直接执行】
+  - 用户提供了 PDF 路径 + 说"解析""提取内容""转文字""转 Markdown""读取"
+  - 用户说"把这个 PDF 转成文本/Markdown"
+
+  【非确定性触发——先问用户是否调用此 skill】
+  - 用户只提到了 PDF 文件名但没说要做什么
+  - 用户说"帮我看这个文件"但不确定是否需要完整解析
+
+  询问话术："需要把这个 PDF 解析成 Markdown 文本吗？"
 type: skill
 ---
 
