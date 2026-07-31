@@ -70,7 +70,12 @@ def verdict_of(a):
     if thin and a["images"] and a["chars"] < MIN_CHARS:
         return "SCANNED"
     if a["chars"] >= MIN_CHARS:
-        return "TEXT_OK" if not thin else "TEXT_SUSPECT"
+        if thin:
+            return "TEXT_SUSPECT"
+        # 正文够多但夹杂大量乱码 → 局部字体坏，需图片校对
+        if a["moji"] > MOJIBAKE_RATIO * max(a["cjk"], 1):
+            return "TEXT_PARTIAL"
+        return "TEXT_OK"
     if a["images"]:
         return "SCANNED"
     return "TEXT_BAD"
