@@ -53,6 +53,7 @@ def analyze(page):
         "chars": len(body.strip()),
         "cjk": len(CJK.findall(body)),
         "junk": len(JUNK.findall(body)),
+        "moji": len(MOJIBAKE.findall(body)),
         "drawings": len(page.get_drawings()),
         "images": len(page.get_images(full=True)),
         "wm": sum(v for v in counts.values() if v >= 3),
