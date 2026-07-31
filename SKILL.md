@@ -21,6 +21,7 @@ type: skill
 | [[pdf-parse/progress]] | 开发进度记录 |
 | [[pdf-parse/task_plan]] | 历史任务规划文件 |
 | `.gitignore` | Git 忽略规则 |
+| [[pdf-parse/pdf_triage]] | (待补充用途说明) |
 
 # PDF → Markdown 转换 Skill
 
