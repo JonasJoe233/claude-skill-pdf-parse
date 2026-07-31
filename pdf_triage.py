@@ -57,10 +57,14 @@ def analyze(page):
 def verdict_of(a):
     if a["junk"] * 5 >= max(a["chars"], 1):
         return "BROKEN_CMAP"
-    if a["chars"] >= MIN_CHARS:
-        return "TEXT_OK" if (a["cjk"] >= MIN_CJK or a["chars"] >= 400) else "TEXT_SUSPECT"
-    if a["drawings"] > 300:
+    # 转曲文档的残留文本常是无 CJK 的水印串（长度可能过百），先判矢量再看字数
+    thin = a["cjk"] < MIN_CJK and a["chars"] < 400
+    if thin and a["drawings"] > 300:
         return "VECTOR_OUTLINED"
+    if thin and a["images"] and a["chars"] < MIN_CHARS:
+        return "SCANNED"
+    if a["chars"] >= MIN_CHARS:
+        return "TEXT_OK" if not thin else "TEXT_SUSPECT"
     if a["images"]:
         return "SCANNED"
     return "TEXT_BAD"
