@@ -25,6 +25,10 @@ CJK = re.compile(r"[㐀-䶿一-鿿぀-ヿ가-힯]")
 JUNK = re.compile(r"[-�]")  # 私有区/替换符 → cmap 坏了，取出来是乱码
 MIN_CJK = 15       # 中文文档正常一页远超此值
 MIN_CHARS = 80
+# 拉丁扩展 + 修饰符字母：中文被错误 cmap 映射后的典型产物
+# 实测 23 份中文简历语料：正常文档占 CJK 数 ≤1.7%，坏字体文档 ≥10%
+MOJIBAKE = re.compile("[¡-ɏʰ-˿]")
+MOJIBAKE_RATIO = 0.04
 
 VERDICT_HINT = {
     "TEXT_OK": "文本层完好，直接用下方文本，不要渲染图片",
