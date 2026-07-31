@@ -143,8 +143,14 @@ def main():
     n = min(doc.page_count, a.max_pages)
     stats = [analyze(doc[i]) for i in range(n)]
     verdicts = [verdict_of(s) for s in stats]
-    # 全篇结论取最常见页级结论；只要有一页文本可用就不轻易判死
-    overall = "TEXT_OK" if verdicts.count("TEXT_OK") * 2 >= n else Counter(verdicts).most_common(1)[0][0]
+
+    # 聚合：坏字体只污染部分页也要全篇按 PARTIAL 处理（宁可多给图片，也不能让乱码悄悄进结论）
+    if "TEXT_PARTIAL" in verdicts and any(v == "TEXT_OK" for v in verdicts):
+        overall = "TEXT_PARTIAL"
+    elif verdicts.count("TEXT_OK") * 2 >= n:
+        overall = "TEXT_OK"
+    else:
+        overall = Counter(verdicts).most_common(1)[0][0]
     if a.force_render:
         overall = "TEXT_BAD"
 
@@ -152,14 +158,20 @@ def main():
     print(f"PAGES: {doc.page_count} (analyzed {n})")
     print(f"VERDICT: {overall}")
     print(f"HINT: {VERDICT_HINT[overall]}")
-    print(f"STATS: " + " | ".join(
-        f"p{i+1} chars={s['chars']} cjk={s['cjk']} junk={s['junk']} draw={s['drawings']} img={s['images']} wm={s['wm']}"
+    print("PAGE_VERDICTS: " + " ".join(f"p{i+1}={v}" for i, v in enumerate(verdicts)))
+    print("STATS: " + " | ".join(
+        f"p{i+1} chars={s['chars']} cjk={s['cjk']} moji={s['moji']} junk={s['junk']} draw={s['drawings']} img={s['images']} wm={s['wm']}"
         for i, s in enumerate(stats)))
 
-    if overall in ("TEXT_OK", "TEXT_SUSPECT"):
-        print("\n--- TEXT (水印行已剔除) ---")
+    if overall in ("TEXT_OK", "TEXT_SUSPECT", "TEXT_PARTIAL"):
+        note = "，⚠ 行首标 [?] 的是含乱码行，必须用图片校对" if overall == "TEXT_PARTIAL" else ""
+        print(f"\n--- TEXT (水印行已剔除{note}) ---")
         for i, s in enumerate(stats):
-            print(f"\n===== PAGE {i + 1} =====\n{s['body']}")
+            body = s["body"]
+            if overall == "TEXT_PARTIAL":
+                body = "\n".join(
+                    ("[?] " + l) if MOJIBAKE.search(l) else l for l in body.splitlines())
+            print(f"\n===== PAGE {i + 1} =====\n{body}")
 
     if overall != "TEXT_OK":
         outdir = writable_outdir(a.outdir, path.stem[:40])
