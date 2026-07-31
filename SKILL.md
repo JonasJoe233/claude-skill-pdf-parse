@@ -23,6 +23,7 @@ type: skill
 | [[pdf-parse/progress]] | 开发进度记录 |
 | [[pdf-parse/task_plan]] | 历史任务规划文件 |
 | `.gitignore` | Git 忽略规则 |
+| `raw/` | 执行归档（本 skill 为工具型，通常不产物；仅在遇到新型加密混淆 PDF 时归档到 `raw/YYYY-MM-DD_<症状>/` 留样本，并把阈值标定结论写进 [[pdf-parse/wiki]]） |
 | [[pdf-parse/wiki]] | (待补充用途说明) |
 
 # PDF 读取 Skill
