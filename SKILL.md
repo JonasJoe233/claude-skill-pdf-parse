@@ -100,6 +100,8 @@ triage 判错（把坏文本判成 `TEXT_OK`，或把正常文档误判为需渲
 pdf-parse/
 ├── SKILL.md         # 本文件，skill 主逻辑
 ├── meta.md          # 关联声明，供 _discover.py 计算关联 skill
+├── wiki.md          # 跨执行索引：阈值标定依据 + 已知问题 PDF 来源
 ├── pdf_triage.py    # 默认入口：预检 + 按需渲染 PNG（毫秒级）
-└── parse_pdf.py     # 重型兜底：marker-pdf 转结构化 Markdown
+├── parse_pdf.py     # 重型兜底：marker-pdf 转结构化 Markdown
+└── raw/             # 判错样本归档（工具型 skill，通常为空）
 ```
