@@ -84,6 +84,14 @@ python3 ~/.claude/skills/pdf-parse/parse_pdf.py <pdf_path>
 - triage 全部输出走 stdout，可直接管道 grep `^VERDICT`
 - 视觉识别读图时，人名/公司名/数字要逐字核对，别凭印象补全
 
+## 遇到判错时：归档到 raw/ 并更新标定
+
+triage 判错（把坏文本判成 `TEXT_OK`，或把正常文档误判为需渲染）时，不要就地改阈值了事：
+
+1. 把样本 PDF 归档到 `raw/YYYY-MM-DD_<症状>/`，同目录写 `input.md` 记录判错表现。
+2. 调阈值后**必须重跑全语料回归**（命令与期望结果见 [[pdf-parse/wiki]]），确认没有引入新的误判。
+3. 把新的标定依据写进 [[pdf-parse/wiki]] 的阈值表——阈值的价值全在标定语料上，不记录等于下次重新试错。
+
 ---
 
 ## 目录结构
