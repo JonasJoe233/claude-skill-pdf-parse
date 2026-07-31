@@ -83,3 +83,78 @@ def writable_outdir(explicit, stem):
         except OSError:
             continue
     sys.exit("找不到可写目录用于渲染 PNG")
+
+
+def render(doc, outdir, dpi, max_width, pages):
+    out = []
+    for i in pages:
+        page = doc[i]
+        d = dpi
+        # 控制像素宽度，避免图过大拖慢视觉读取
+        if max_width:
+            w = page.rect.width * d / 72
+            if w > max_width:
+                d = max(72, int(d * max_width / w))
+        f = outdir / f"p{i + 1}.png"
+        page.get_pixmap(dpi=d).save(f)
+        out.append(f)
+    return out
+
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("pdf")
+    ap.add_argument("--dpi", type=int, default=150)
+    ap.add_argument("--max-width", type=int, default=1600)
+    ap.add_argument("--outdir")
+    ap.add_argument("--force-render", action="store_true")
+    ap.add_argument("--max-pages", type=int, default=20)
+    a = ap.parse_args()
+
+    path = Path(a.pdf).expanduser()
+    if not path.exists():
+        sys.exit(f"文件不存在：{path}")
+
+    try:
+        doc = fitz.open(path)
+    except Exception as e:
+        sys.exit(f"打不开 PDF：{e}")
+
+    if doc.needs_pass and not doc.authenticate(""):
+        print("VERDICT: ENCRYPTED")
+        print("HINT:", VERDICT_HINT["ENCRYPTED"])
+        return
+
+    n = min(doc.page_count, a.max_pages)
+    stats = [analyze(doc[i]) for i in range(n)]
+    verdicts = [verdict_of(s) for s in stats]
+    # 全篇结论取最常见页级结论；只要有一页文本可用就不轻易判死
+    overall = "TEXT_OK" if verdicts.count("TEXT_OK") * 2 >= n else Counter(verdicts).most_common(1)[0][0]
+    if a.force_render:
+        overall = "TEXT_BAD"
+
+    print(f"FILE: {path}")
+    print(f"PAGES: {doc.page_count} (analyzed {n})")
+    print(f"VERDICT: {overall}")
+    print(f"HINT: {VERDICT_HINT[overall]}")
+    print(f"STATS: " + " | ".join(
+        f"p{i+1} chars={s['chars']} cjk={s['cjk']} junk={s['junk']} draw={s['drawings']} img={s['images']} wm={s['wm']}"
+        for i, s in enumerate(stats)))
+
+    if overall in ("TEXT_OK", "TEXT_SUSPECT"):
+        print("\n--- TEXT (水印行已剔除) ---")
+        for i, s in enumerate(stats):
+            print(f"\n===== PAGE {i + 1} =====\n{s['body']}")
+
+    if overall != "TEXT_OK":
+        outdir = writable_outdir(a.outdir, path.stem[:40])
+        files = render(doc, outdir, a.dpi, a.max_width, range(n))
+        print("\n--- IMAGES (用 Read 工具读取这些路径) ---")
+        for f in files:
+            print(f)
+        if doc.page_count > n:
+            print(f"NOTE: 仅渲染前 {n} 页，其余用 --max-pages 调整")
+
+
+if __name__ == "__main__":
+    main()
