@@ -33,6 +33,7 @@ MOJIBAKE_RATIO = 0.04
 VERDICT_HINT = {
     "TEXT_OK": "文本层完好，直接用下方文本，不要渲染图片",
     "TEXT_SUSPECT": "文本量偏少，文本与图片都给了；先看文本，明显不全再 Read 图片",
+    "TEXT_PARTIAL": "部分字体 cmap 坏了（正文可读但标题/公司名等成乱码）→ 文本+图片都给了，必须用图片校对乱码段",
     "VECTOR_OUTLINED": "文字已转曲为矢量路径（文本层只剩水印）→ 必须走图片视觉识别",
     "BROKEN_CMAP": "字体 cmap 损坏/被混淆，取出的是乱码 → 必须走图片视觉识别",
     "SCANNED": "扫描件/纯图片 PDF → 必须走图片视觉识别",
