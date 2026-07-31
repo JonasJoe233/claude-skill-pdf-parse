@@ -16,6 +16,7 @@ type: skill
 |------|------|
 | [[pdf-parse/SKILL]] | Skill 主文件，定义触发条件、工作流程、注意事项 |
 | [[pdf-parse/meta]] | 关联声明：topics/product_scope/data 字段，供 `_discover.py` 自动计算与其他 skill 的关联关系 |
+| [[pdf-parse/wiki]] | 跨执行索引：判定阈值的标定依据（改阈值前必读）+ 已知问题 PDF 来源清单 |
 | [[pdf-parse/pdf_triage.py\|pdf_triage.py]] | **默认入口**：文本层预检 + 按需渲染 PNG（毫秒级，零模型，处理加密/转曲/乱码/扫描件） |
 | [[pdf-parse/parse_pdf.py\|parse_pdf.py]] | 重型兜底：marker-pdf 转结构化 Markdown（表格/公式/OCR，自动装依赖） |
 | [[pdf-parse/README]] | 快速使用说明 |
